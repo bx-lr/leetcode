@@ -7,7 +7,7 @@ def topKFrequent(nums: List[int], k: int) -> List[int]:
     # memory: O(n) 
 
     count = {}
-    freq = [[] for i in range(len(nums)+1)]
+    freq = [[] for _ in range(len(nums)+1)]
     for n in nums:
         count[n] = 1 + count.get(n, 0)
     for n, c in count.items():
