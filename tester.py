@@ -100,6 +100,7 @@ def run_bandit(problems: list):
             was_wrong = sol.check()
             del sol
         except Exception:
+            # something went wrong, maybe a typo... idk
             print(sys.exc_info())
             print(f'Source file: "{modules[max_idx].__file__}"')
         # update the score
