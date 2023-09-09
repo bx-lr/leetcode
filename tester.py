@@ -67,7 +67,7 @@ def run_bandit(problems: list):
         print('Exiting, heres your summary:')
         for d, n in zip(data, names):
             print(f'\tResult for problem: {n}')
-            print(f'\tFailure rate: {sum(d) / len(d)}')
+            print(f'\tNumber of tests: {len(d)-1}, Failure rate: {sum(d) / len(d)}')
         sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -106,6 +106,7 @@ def run_bandit(problems: list):
         # update the score
         if was_wrong:
             print(modules[max_idx].get_solution())
+            _ = input('Press enter to continue...')
         data[max_idx].append(was_wrong)
     return
 
@@ -118,7 +119,7 @@ def main():
         print(f'\tCategory: {k}')
         for item in v:
             print(f'\t\tProblem: {item["name"]}')
-            print(f'\t\tDifficulty: {item["difficulty"]}\n')
+            print(f'\t\tDifficulty: {item["difficulty"]}')
     categories = []
     problems = []
     # get the input category
@@ -140,11 +141,11 @@ def main():
         if len(dif) < 1:
             dif = -1
         else:
-            dif = int(dif)
+            dif = float(dif)
         # get the selected problems
         for cat in categories:
             for item in questions[cat]:
-                if dif < 0 or (dif == item.get('difficulty', 0)):
+                if dif < 0.0 or (dif == item.get('difficulty', 0.0)):
                     problems.append(item)
     # start the bandit
     run_bandit(problems=problems)
