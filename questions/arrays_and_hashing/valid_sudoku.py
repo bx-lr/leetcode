@@ -3,7 +3,7 @@ from typing import *
 
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
-        return True
+        return
 
     def check(self) -> int:
         '''

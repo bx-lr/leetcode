@@ -78,7 +78,7 @@ def run_bandit(problems: list):
             if len(data[idx]) == 1:  # never seen this problem before
                 tmp_row_values.append(1000)
             else:
-                # calculate our score using 
+                # calculate our score using bandit
                 score = ((sum(data[idx]) / len(data[idx])) + (math.sqrt(2 * math.log(sum([len(x) for x in data])+1) / len(data[idx]))))
                 tmp_row_values.append(score)
         # find optimal question (one with most wrong answers)
@@ -101,10 +101,13 @@ def run_bandit(problems: list):
             del sol
         except Exception:
             # something went wrong, maybe a typo... idk
+            # todo: print traceback
             print(sys.exc_info())
             print(f'Source file: "{modules[max_idx].__file__}"')
         # update the score
         if was_wrong:
+            # todo: print diff of source file with solution code
+            # todo: add pretty colors
             print(modules[max_idx].get_solution())
             _ = input('Press enter to continue...')
         data[max_idx].append(was_wrong)
@@ -136,6 +139,8 @@ def main():
             print(f'Unknown group "{inp}", try again')
     # get the input problem level
     while len(problems) < 1:
+        # todo: use argparse to select range of problems
+        # e.g. -ge 1 -le 2.5
         dif = input('What difficulty level would you like to evaluate?\nInput number (1-3, lowest=easiest) or press enter for all: ')
         # cast our stuff
         if len(dif) < 1:
@@ -155,3 +160,7 @@ def main():
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     main()
+# autodocstring
+# bettercomments
+# todostring? todotree
+# rewrap
