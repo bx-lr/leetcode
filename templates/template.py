@@ -15,20 +15,21 @@ class Solution:
         return 1 if tests failed
         '''
         arg0 = [1, 2, 3]
-        arg1 = [4, 5, 6]
         expected = [True, False, True]
         results = []
-        for a0, a1, exp in zip(arg0, arg1, expected):
-            res = self.doSomething(a0, a1)
+        for a0, exp in zip(arg0, expected):
+            res = self.doSomething(a0)
             results.append(res)
             if res == exp:
-                print(f'\tpassed test: {a0} {a1}, expected: {exp}, result: {res}')
+                print(f'\tpassed test: {a0}, expected: {exp}, result: {res}')
             else:
-                print(f'\t!!!failed test: {a0} {a1}, expected: {exp}, result: {res}')
+                print(f'\t!!!failed test: {a0}, expected: {exp}, result: {res}')
                 return 1
         if results == expected:
             print('**** All tests passed ****')
-        return 0
+            return 0
+        print('!!!!Oh noes, something failed!!!')
+        return 1
 
 
 def get_difficulty() -> int:
@@ -55,15 +56,9 @@ def get_solution() -> str:
     solution = '''
 Incorrect! Here is the solution:
 
-def isAnagram(self, s: str, t: str) -> bool:
-    if len(s) != len(t):
-        return False
-    countS, countT = dict(), dict()
-    for i in range(len(s)):
-        countS[s[i]] = 1 + countS.get(s[i], 0)
-        countT[t[i]] = 1 + countT.get(t[i], 0)
-    return countS == countT
-
+def doSomething(self, arg0: int, arg1: int) -> bool:
+    # Implement the logic of the function. Will be called by check()
+    return True
 '''
     return solution
 
