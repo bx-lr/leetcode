@@ -3,7 +3,7 @@ from typing import *
 
 class Solution:
     def isValid(self, s: str) -> bool:
-        return True
+        return
 
     def check(self) -> int:
         '''

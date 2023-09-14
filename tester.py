@@ -36,7 +36,6 @@ def get_all_questions() -> dict:
         fpath = fn.split(os.sep)
         # import the script
         try:
-
             mod = (__import__(fpath[-1].rstrip('.py')))
             # get the difficulty, problem name, and category
             difficulty = mod.get_difficulty()
