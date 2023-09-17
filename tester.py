@@ -8,7 +8,8 @@ import math
 import shutil
 from typing import *
 import glob
-
+import argparse
+import traceback
 
 '''
 multi-armed bandit Q/A on leetcode questions
@@ -77,7 +78,7 @@ def run_bandit(problems: list):
             if len(data[idx]) == 1:  # never seen this problem before
                 tmp_row_values.append(1000)
             else:
-                # calculate our score using bandit
+                # calculate our score
                 score = ((sum(data[idx]) / len(data[idx])) + (math.sqrt(2 * math.log(sum([len(x) for x in data])+1) / len(data[idx]))))
                 tmp_row_values.append(score)
         # find optimal question (one with most wrong answers)
@@ -100,12 +101,12 @@ def run_bandit(problems: list):
             del sol
         except Exception:
             # something went wrong, maybe a typo... idk
-            # todo: print traceback
             print(sys.exc_info())
+            traceback.print_exc()
             print(f'Source file: "{modules[max_idx].__file__}"')
         # update the score
         if was_wrong:
-            # todo: print diff of source file with solution code
+            # todo: print diff of source file get_solution() results with solution code from scratch_pad.py
             # todo: add pretty colors
             print(modules[max_idx].get_solution())
             _ = input('Press enter to continue...')
@@ -140,17 +141,34 @@ def main():
     while len(problems) < 1:
         # todo: use argparse to select range of problems
         # e.g. -ge 1 -le 2.5
-        dif = input('What difficulty level would you like to evaluate?\nInput number (1-3, lowest=easiest) or press enter for all: ')
+        dif = input('What difficulty level would you like to evaluate?\nInput number (1-3, lowest=easiest, supports --ge 1.0 --le 2.5 range) or press enter for all: ')
         # cast our stuff
+        start, stop = 0.0, 0.0
         if len(dif) < 1:
             dif = -1
         else:
-            dif = float(dif)
+            dif = dif.split(' ')
+            for i in range(len(dif)):
+                if dif[i].find('le') > -1 or dif[i] == '<':
+                    stop = float(dif[i+1])
+                elif dif[i].find('ge') > -1 or dif[i] == '>':
+                    start = float(dif[i+1])
+                else:
+                    continue
+
         # get the selected problems
         for cat in categories:
             for item in questions[cat]:
-                if dif < 0.0 or (dif == item.get('difficulty', 0.0)):
-                    problems.append(item)
+                # handle case when difficulty is a single number
+                if type(dif) == type(0.0):
+                    if dif < 0.0 or (dif == item.get('difficulty', 0.0)):
+                        problems.append(item)
+                # handle range
+                elif stop > 0.0:
+                    if (item.get('difficulty', 0.0) <= stop) and (item.get('difficulty', 0.0) >= start):
+                        problems.append(item)
+                else:
+                    continue
     # start the bandit
     run_bandit(problems=problems)
     return

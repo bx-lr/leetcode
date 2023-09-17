@@ -26,7 +26,7 @@ class Solution():
 
 
 def get_difficulty() -> int:
-    return 1
+    return 1.3
 
 
 def get_instructions() -> str:
