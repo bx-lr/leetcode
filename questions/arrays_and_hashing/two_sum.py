@@ -34,7 +34,7 @@ def get_difficulty() -> int:
     2 = medium
     3 = hard
     '''
-    return 1.2
+    return 1.3
 
 
 def get_instructions() -> str:

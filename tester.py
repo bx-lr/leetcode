@@ -67,7 +67,12 @@ def run_bandit(problems: list):
         print('Exiting, heres your summary:')
         for d, n in zip(data, names):
             print(f'\tResult for problem: {n}')
-            print(f'\tNumber of tests: {len(d)-1}, Failure rate: {sum(d) / len(d)}')
+
+            if len(d) - 1 > 0:
+                print(f'\tNumber of tests: {len(d)-1}, Pass rate: {(1 - sum(d) / (len(d)-1)) * 100}%')
+            else:
+                print('\tNot tested')
+            print(d)
         sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
 
