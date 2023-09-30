@@ -14,22 +14,21 @@ class Solution:
         return 0 if tests passed
         return 1 if tests failed
         '''
-        arg0 = [1, 2, 3]
-        expected = [True, False, True]
-        results = []
-        for a0, exp in zip(arg0, expected):
-            res = self.doSomething(a0)
-            results.append(res)
-            if res == exp:
-                print(f'\tpassed test: {a0}, expected: {exp}, result: {res}')
+        arg0 = [] # <- update
+        for a0 in arg0:
+            good = self.solution(a0) # <- insert actual solution
+            res = self.doSomething(a0) # <-change name
+            if good == res:
+                print(f'\tpassed test: {a0}, expected: {good}, result: {res}')
             else:
-                print(f'\t!!!failed test: {a0}, expected: {exp}, result: {res}')
+                print(f'\t!!!failed test: {a0}, expected: {good}, result: {res}')
                 return 1
-        if results == expected:
-            print('**** All tests passed ****')
-            return 0
-        print('!!!!Oh noes, something failed!!!')
-        return 1
+        print('**** All tests passed ****')
+        return 0
+
+    def solution(self):
+        ''' insert the actual solution here'''
+        return
 
 
 def get_difficulty() -> int:
@@ -38,7 +37,7 @@ def get_difficulty() -> int:
     2 = medium
     3 = hard
     '''
-    return -1
+    return -1 # <- update
 
 
 def get_instructions() -> str:
