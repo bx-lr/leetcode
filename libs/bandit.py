@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import math
 
 
 class MultiArmedBandit:
@@ -9,6 +10,9 @@ class MultiArmedBandit:
         self.estimated_success_rates = np.zeros(num_questions)
         # Number of times each arm has been pulled
         self.action_counts = np.zeros(num_questions)
+        # question counts (data) 
+        self.question_counts = [[0] for _ in np.zeros(num_questions)]
+
         # Exploration weight (higher values prioritize exploration)
         self.exploration_weight = 1.0
         # Number of times each question has been asked
@@ -22,21 +26,36 @@ class MultiArmedBandit:
         # (estimated success rates + exploration bonuses)
         ucb_scores = self.estimated_success_rates + exploration_bonus
         # Choose the question with the lowest UCB score
-        print('exploration_bonus', exploration_bonus)
-        print('estimated_success_rates', self.estimated_success_rates)
-        print('ucb_scores', ucb_scores)
+        #print('exploration_bonus', exploration_bonus)
+        #print('estimated_success_rates', self.estimated_success_rates)
+        #print('ucb_scores', ucb_scores)
         # randomly prioritize exploration or re-asking the worst question
         decision = random.randint(0, 1)
         if decision:
             chosen_question = np.argmax(ucb_scores)
-            print('using argmax')
+            #print('using argmax')
         else:
-            print('using argmin')
+            #print('using argmin')
             chosen_question = np.argmin(ucb_scores)
-        #chosen_question = if random.randint(0,1): np.argmax(ucb_scores) else: np.argmin(ucb_scores)
-        print('argmin: ', np.argmax(ucb_scores))
-        print('chosen_question:', chosen_question)
+
+        #print('argmin: ', np.argmax(ucb_scores))
+        #print('chosen_question:', chosen_question)
         return chosen_question
+
+    def choose_question_2(self):
+        tmp_row_values = []
+        for idx in range(self.num_questions):
+            if len(self.question_counts[idx]) == 1:
+                tmp_row_values.append(1000)
+            else:
+                score = ((sum(self.question_counts[idx]) / len(self.question_counts[idx])) + (math.sqrt(2 * math.log(sum([len(x)for x in self.question_counts]) + 1) / len(self.question_counts[idx]))))
+                tmp_row_values.append(score)
+        chosen_question = tmp_row_values.index(max(tmp_row_values))
+        return chosen_question
+
+    def update_2(self, question, success):
+        self.question_counts[question].append(success)
+        return
 
     def update(self, question, success):
         # Update action counts
@@ -46,11 +65,11 @@ class MultiArmedBandit:
         update_value = (success
                         - self.estimated_success_rates[question]
                         ) / self.action_counts[question]
-        print('update_value:', update_value)
+        #print('update_value:', update_value)
         self.estimated_success_rates[question] += (
             success - self.estimated_success_rates[question]
             ) / self.action_counts[question]
-        print('estimated_success_rates:', self.estimated_success_rates)
+        #print('estimated_success_rates:', self.estimated_success_rates)
         return
 
 if __name__ == '__main__':

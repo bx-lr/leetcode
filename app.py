@@ -14,9 +14,10 @@ from libs.bandit import MultiArmedBandit
 class LeetCodeRunner(cmd2.Cmd):
     '''Simple cmd2 application to test your leetcode ability'''
     def __init__(self, files):
-        super().__init__()
+        super().__init__(startup_script='.cmd2rc', silence_startup_script=True)
         # List of all files with full path
         self.files = files
+        self.orig_prompt = '(Cmd) '
         # List of all categories
         self.categories = [fn.split(os.sep)[-2] for fn in self.files]
         # List of all questions, .py files
@@ -191,8 +192,10 @@ class LeetCodeRunner(cmd2.Cmd):
         return
 
     def get_bandit_question(self):
+        '''Use the bandit to select a question'''
         # Get the question with the lowest score
-        q_num = self.bandit.choose_question()
+        #q_num = self.bandit.choose_question()
+        q_num = self.bandit.choose_question_2()
         # get actual question and update current
         question = self.test_questions[q_num]
         self.current_question = question
@@ -200,8 +203,10 @@ class LeetCodeRunner(cmd2.Cmd):
         return question
 
     def update_bandit(self, success):
+        '''updates the bandit based on how we did'''
         # update the question score based on how we did
         self.bandit.update(self.current_question_num, success)
+        #self.bandit.update_2(self.current_question_num, success)
         self.bandit.question_attempts[self.current_question_num] += 1
         self.bandit.total_successes.append(success)
         return
@@ -212,6 +217,8 @@ class LeetCodeRunner(cmd2.Cmd):
             print('Use the select command to select a question first')
             return
         question = self.get_bandit_question()
+        print(question)
+        self.prompt = f'({question["name"]}) '
         # create solution file
         print('\n\n**** Emitting problem file: "scratch_pad.py" ****')
         print('\nProblem Description: \n')
@@ -248,6 +255,10 @@ class LeetCodeRunner(cmd2.Cmd):
         else:
             # answered correctly
             self.update_bandit(1)
+        # better update function
+        # todo: move into update_bandit
+        self.bandit.update_2(self.current_question_num, was_wrong)
+        self.prompt = self.orig_prompt
         return
 
     # argparser for do_list
@@ -285,7 +296,7 @@ class LeetCodeRunner(cmd2.Cmd):
 
     def do_clear(self, args):
         '''Clear questions/categories, reset min/max levels, clear bandit'''
-        # zero all values 
+        # zero all values
         self.selection = []
         self.question_difficulty_min = 1.0
         self.question_difficulty_max = 4.0
@@ -319,7 +330,7 @@ class LeetCodeRunner(cmd2.Cmd):
             selected = question.get('selected', -1)
             name = question.get('name', -1)
 
-            if success < 0.9 and success > 0.0:
+            if success < 0.9 and attempts > 0.0:
                 # tested poorly
                 table.add_row(f'[red]{difficulty}[/]',
                               f'[red]{category}[/]',
