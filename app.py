@@ -217,7 +217,7 @@ class LeetCodeRunner(cmd2.Cmd):
             print('Use the select command to select a question first')
             return
         question = self.get_bandit_question()
-        print(question)
+        #print(question)
         self.prompt = f'({question["name"]}) '
         # create solution file
         print('\n\n**** Emitting problem file: "scratch_pad.py" ****')
