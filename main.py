@@ -275,6 +275,10 @@ class LeetCodeRunner(cmd2.Cmd):
         # otherwise we should only print the ones with
         # selected==True
         for cat in self.ordered_questions.keys():
+            # TODO: really fix this bug
+            if not self.ordered_questions.get(cat, None):
+                return
+
             cols = list(self.ordered_questions[cat][0].keys())
             table = Table(title=cat, min_width=100)
 
