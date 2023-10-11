@@ -297,6 +297,14 @@ class LeetCodeRunner(cmd2.Cmd):
     def do_clear(self, args):
         '''Clear questions/categories, reset min/max levels, clear bandit'''
         # zero all values
+        for question in self.test_questions:
+            name = question.get('name', '')
+            category = question.get('category', '')
+            items = self.ordered_questions[category]
+            for item in items:
+                if item['name'] == name:
+                    item['selected'] = False
+                    continue
         self.selection = []
         self.question_difficulty_min = 1.0
         self.question_difficulty_max = 4.0
